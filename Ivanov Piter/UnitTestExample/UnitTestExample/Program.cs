@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace UnitTestExample
 {
-    class Program
+    public class Program
     {
         static void Main(string[] args)
         {
@@ -25,24 +25,27 @@ namespace UnitTestExample
             //7. Заглушка заменяется на реальный код для позитивного теста 
             //8. Рефакторинг тестов: эталонный лог тестирования
             //
-            double A = 1;
-            double B = -7;
-            double C = 14;
             bool result = false;
             String msg = String.Empty;
             double X1;
             double X2;
-            QuadraticEquation qE1 = new QuadraticEquation(A, B, C);
-            result = qE1.calc(out X1, out X2);
-            StringBuilder log = new StringBuilder();
-            msg = testResult(X1, X2, result, log);
-            A = 1;
-            B = -7;
-            C = 12;
-            QuadraticEquation qE2 = new QuadraticEquation(A, B, C);
-            result = qE2.calc(out X1, out X2);
-            msg = testResult(X1, X2, result, log);
+            double A ;
+            double B ;
+            double C ;
 
+            StringBuilder log;
+            calcSolutionTest1(out result, out msg, out X1, out X2, out A, out B, out C, out log);
+            calcSolutionTest2(out result, out msg, out X1, out X2, out A, out B, out C, log);
+            msg = CheckLog(log);
+
+            Console.WriteLine(msg);
+            Console.WriteLine("Press any key...");
+            Console.ReadKey();
+        }
+
+        public static string CheckLog(StringBuilder log)
+        {
+            string msg;
             string logEtalon = "Корней нет.X1=3, X2=4";
             if (String.CompareOrdinal(logEtalon, log.ToString()) == 0)
             {
@@ -59,12 +62,31 @@ namespace UnitTestExample
                 msg = sb.ToString();
             }
 
-            Console.WriteLine(msg);
-            Console.WriteLine("Press any key...");
-            Console.ReadKey();
+            return msg;
         }
 
-        private static string testResult(double X1, double X2, bool result, StringBuilder log)
+        public static void calcSolutionTest2(out bool result, out string msg, out double X1, out double X2, out double A, out double B, out double C, StringBuilder log)
+        {
+            A = 1;
+            B = -7;
+            C = 12;//"X1=3, X2=4"
+            QuadraticEquation qE2 = new QuadraticEquation(A, B, C);
+            result = qE2.calc(out X1, out X2);
+            msg = testResult(X1, X2, result, log);
+        }
+
+        public static void calcSolutionTest1(out bool result, out string msg, out double X1, out double X2, out double A, out double B, out double C, out StringBuilder log)
+        {
+            A = 1;
+            B = -7;
+            C = 14;
+            QuadraticEquation qE1 = new QuadraticEquation(A, B, C);
+            result = qE1.calc(out X1, out X2);
+            log = new StringBuilder();
+            msg = testResult(X1, X2, result, log);
+        }
+
+        public static string testResult(double X1, double X2, bool result, StringBuilder log)
         {
             string msg;
             if (result == false)
